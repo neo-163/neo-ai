@@ -1,0 +1,8 @@
+__pycache__/
+Test/
+Resource/Audio/
+
+# 忽略所有目录下的setting.py文件  
+**/setting.py
+# 但不忽略Extension/Demo/setting.py  
+!Extension/Demo/setting.py

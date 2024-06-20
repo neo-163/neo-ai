@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Upload</title>
+</head>
+<body>
+    <h1>上传PDF文档测试RAG</h1>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <button id="uploadButton">上传PDF</button>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            var fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Please select a PDF file to upload.');
+                return;
+            }
+
+            var myHeaders = new Headers();
+
+            var formdata = new FormData();
+            formdata.append("file", fileInput.files[0]);
+
+            var requestOptions = {
+                method: 'POST',
+                body: formdata,
+                redirect: 'follow'
+            };
+
+            fetch("http://127.0.0.1:1888/rag/upload", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                    document.getElementById('response').innerText = result;
+                })
+                .catch(error => {
+                    console.log('error', error);
+                    document.getElementById('response').innerText = 'Error: ' + error;
+                });
+        });
+    </script>
+</body>
+</html>

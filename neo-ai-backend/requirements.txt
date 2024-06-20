@@ -1,0 +1,10 @@
+fastapi
+python-multipart
+uvicorn
+dashscope
+openai
+transformers[torch]
+accelerate
+scikit-learn
+aliyun-python-sdk-core==2.13.12
+PyPDF2

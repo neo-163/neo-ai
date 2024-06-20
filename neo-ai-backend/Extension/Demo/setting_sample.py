@@ -1,0 +1,1 @@
+VALUE1 = '<VALUE1>'
