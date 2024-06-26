@@ -2,33 +2,7 @@
   <div class="chat-dialog">
     <div class="pdf-viewer-container" v-if="pdfUrl">
       <div class="pdf-viewer">
-        <pdf-viewer
-          :source="pdfUrl"
-          :page="currentPage"
-          :total-pages="totalPages"
-          @updatePage="handlePageChange"
-          @loaded="handlePdfLoaded"
-          @rendered="handlePageRendered"
-        />
-      </div>
-      <div class="pdf-pagination" v-if="totalPages > 1">
-        <div class="page-info">
-          第 {{ currentPage }} / {{ totalPages }} 页
-        </div>
-        <div class="page-controls">
-          <a-button @click="goToFirstPage" :disabled="currentPage === 1">
-            首页
-          </a-button>
-          <a-button @click="goToPrevPage" :disabled="currentPage === 1">
-            上一页
-          </a-button>
-          <a-button @click="goToNextPage" :disabled="currentPage === totalPages">
-            下一页
-          </a-button>
-          <a-button @click="goToLastPage" :disabled="currentPage === totalPages">
-            尾页
-          </a-button>
-        </div>
+        <iframe :src="pdfUrl" frameborder="0" width="100%" height="100%"></iframe>
       </div>
     </div>
     <div class="chat-container" :class="{ 'full-width': !pdfUrl }">
@@ -119,7 +93,6 @@
 import { ref, computed, nextTick, onMounted } from 'vue';
 import { useMessage } from '/@/hooks/web/useMessage';
 import * as marked from 'marked';
-import PdfViewer from 'vue-pdf-embed';
 import { UploadOutlined } from '@ant-design/icons-vue';
 
 interface Message {
@@ -139,8 +112,6 @@ let autoScroll = true;
 const isAssistantResponding = ref(false);
 const isUploading = ref(false);
 const pdfUrl = ref('');
-const currentPage = ref(1);
-const totalPages = ref(1);
 const isMobile = ref(false);
 let controller: AbortController | null = null;
 
@@ -306,38 +277,6 @@ const extractResultFromJSON = (jsonString: string) => {
   return '';
 };
 
-const handlePageChange = (newPage: number) => {
-  currentPage.value = newPage;
-};
-
-const handlePdfLoaded = (numPages: number) => {
-  totalPages.value = numPages;
-};
-
-const handlePageRendered = (currentPageRendered: number) => {
-  currentPage.value = currentPageRendered;
-};
-
-const goToFirstPage = () => {
-  currentPage.value = 1;
-};
-
-const goToPrevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
-
-const goToNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-const goToLastPage = () => {
-  currentPage.value = totalPages.value;
-};
-
 onMounted(() => {
   const userAgent = navigator.userAgent;
   isMobile.value = /iPhone|iPad|iPod|Android/i.test(userAgent);
@@ -360,30 +299,6 @@ onMounted(() => {
     .pdf-viewer {
       flex: 1;
       overflow: auto;
-    }
-
-    .pdf-pagination {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      background-color: #fff;
-      border-top: 1px solid #e8e8e8;
-
-      .page-info {
-        font-size: 14px;
-        color: #666;
-      }
-
-      .page-controls {
-        display: flex;
-        gap: 8px;
-
-        .ant-btn {
-          border-radius: 4px;
-          font-weight: 500;
-        }
-      }
     }
   }
 
