@@ -1,0 +1,7 @@
+test/
+
+# 忽略 neo-ai-web 目录下的 .env.development 文件
+neo-ai-web/.env.development
+
+# 忽略 neo-ai-web 目录下的 .env.production 文件
+neo-ai-web/.env.production

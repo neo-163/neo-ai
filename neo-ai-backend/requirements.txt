@@ -8,3 +8,5 @@ accelerate
 scikit-learn
 aliyun-python-sdk-core==2.13.12
 PyPDF2
+SQLAlchemy
+chromadb
