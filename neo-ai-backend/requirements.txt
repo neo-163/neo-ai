@@ -15,3 +15,5 @@ torchvision
 torchaudio
 opencv-python
 segment-anything
+langchain
+pdfplumber

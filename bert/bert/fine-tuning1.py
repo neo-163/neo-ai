@@ -12,6 +12,7 @@ questions, labels = zip(*data)
 questions_train, questions_test, labels_train, labels_test = train_test_split(questions, labels, test_size=0.1)
 
 # 加载tokenizer和模型：bert-base-uncased，bert-large-uncased
+# tokenizer主要做了：字符分割，词汇分割，添加特殊标记，转换索引
 base_model = 'bert-base-uncased'
 tokenizer = BertTokenizer.from_pretrained(base_model)
 model = BertForSequenceClassification.from_pretrained(base_model, num_labels=len(set(labels)))
