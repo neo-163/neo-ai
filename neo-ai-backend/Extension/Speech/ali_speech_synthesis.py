@@ -45,11 +45,12 @@ def ali_speech_synthesis(text, voice):
     body = response.read()
 
     now = datetime.now()
-    year_month = now.strftime("%Y%m")
+    year = now.strftime("%Y")
+    year_month_day = now.strftime("%Y%m%d")
     timestamp = now.strftime("%Y%m%d%H%M%S")
     filename = f"{timestamp}."+format
 
-    audio_dir = f"Resource/Audio/{year_month}"
+    audio_dir = f"Resource/Audio/{year}/{year_month_day}"
     os.makedirs(audio_dir, exist_ok=True)
 
     audioSaveFile = f"{audio_dir}/{filename}"
