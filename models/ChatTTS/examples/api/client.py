@@ -14,7 +14,7 @@ CHATTTS_URL = f"http://{chattts_service_host}:{chattts_service_port}/generate_vo
 # main infer params
 body = {
     "text": [
-        "我在测试声音，四川美食确实以辣闻名，但也有不辣的选择。",
+        "四川美食确实以辣闻名，但也有不辣的选择。",
         "比如甜水面、赖汤圆、蛋烘糕、叶儿粑等，这些小吃口味温和，甜而不腻，也很受欢迎。",
     ],
     "stream": False,
