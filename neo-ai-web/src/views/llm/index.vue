@@ -95,13 +95,15 @@
         <label
           for="audio-upload"
           class="upload-button"
+          :class="{ 'mobile-upload': isMobile }"
           :disabled="isUploading || isAssistantResponding"
           :style="{
             backgroundColor: isUploading || isAssistantResponding ? '#ccc' : '#1890ff',
             cursor: isUploading || isAssistantResponding ? 'not-allowed' : 'pointer',
           }"
         >
-          <span>上传音频文件</span>
+          <upload-outlined v-if="isMobile" />
+          <span v-else>上传音频文件</span>
         </label>
       </div>
     </div>
