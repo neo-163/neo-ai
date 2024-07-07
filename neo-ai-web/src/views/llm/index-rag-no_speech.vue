@@ -1,3 +1,4 @@
+<!-- index.vue -->
 <template>
   <div class="chat-dialog">
     <div class="pdf-viewer-container" v-if="pdfUrl">
@@ -37,7 +38,6 @@
           </div>
           <div class="content">
             <span v-html="renderedContent(message.content)"></span>
-            <audio v-if="message.audio" :src="message.audio" controls autoplay></audio>
           </div>
         </div>
       </div>
@@ -85,24 +85,6 @@
         >
           取消
         </a-button>
-        <input
-          id="audio-upload"
-          type="file"
-          @change="uploadAudio"
-          accept="audio/wav"
-          style="display: none"
-        />
-        <label
-          for="audio-upload"
-          class="upload-button"
-          :disabled="isUploading || isAssistantResponding"
-          :style="{
-            backgroundColor: isUploading || isAssistantResponding ? '#ccc' : '#1890ff',
-            cursor: isUploading || isAssistantResponding ? 'not-allowed' : 'pointer',
-          }"
-        >
-          <span>上传音频文件</span>
-        </label>
       </div>
     </div>
   </div>
@@ -117,19 +99,13 @@ import { UploadOutlined } from '@ant-design/icons-vue';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
-  audio?: string;
 }
 
 const messages = ref<Message[]>([]);
 const inputMessage = ref('');
 const { createMessage } = useMessage();
 const renderedContent = computed(() => {
-  return (content) => {
-    if (typeof content === 'string') {
-      return marked.parse(content);
-    }
-    return ''; // 返回空字符串以防止错误
-  };
+  return (content) => marked.parse(content);
 });
 
 const chatMessagesContainer = ref(null);
@@ -219,64 +195,6 @@ const uploadPDF = async (event: Event) => {
   }
 };
 
-
-const clearInputFile = (inputId: string) => {
-  const inputElement = document.getElementById(inputId) as HTMLInputElement;
-  if (inputElement) {
-    inputElement.value = '';
-  }
-};
-
-const uploadAudio = async (event: Event) => {
-  if (isUploading.value || isAssistantResponding.value) return;
-
-  isUploading.value = true;
-  const wait_text = '语音识别中...'
-  messages.value.push({ role: 'assistant', content: wait_text });
-
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (!file || file.type !== 'audio/wav') {
-    createMessage.error('请选择一个WAV音频文件');
-    isUploading.value = false;
-    clearInputFile('audio-upload'); // 清空文件输入
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('audio_file', file);
-
-  controller = new AbortController();
-
-  try {
-    const response = await fetch(`${baseUrl}/speech/ali_speech_short_recognition`, {
-      method: 'POST',
-      body: formData,
-      signal: controller.signal,
-    });
-
-    const lastMessageIndex = messages.value.length - 1;
-    if (response.ok) {
-      const data = await response.json();
-      messages.value.splice(lastMessageIndex, 1); // Remove the wait_text message
-      inputMessage.value = data.result.text
-      sendMessage();
-
-    } else {
-      createMessage.error('上传音频文件失败');
-      messages.value.splice(lastMessageIndex, 1); // Remove the wait_text message
-    }
-  } catch (error) {
-    if (error.name !== 'AbortError') {
-      createMessage.error('上传音频文件失败');
-      messages.value.splice(lastMessageIndex, 1); // Remove the wait_text message
-    }
-  } finally {
-    controller = null;
-    isUploading.value = false;
-    clearInputFile('audio-upload'); // 清空文件输入
-  }
-};
-
 const handleInputMessage = async () => {
   if (inputMessage.value.trim() === '' || isAssistantResponding.value || isUploading.value) return;
 
@@ -352,11 +270,7 @@ const extractResultFromJSON = (jsonString: string) => {
   try {
     const data = JSON.parse(jsonString);
     if (data && data.result) {
-      if (data.audio) {
-        messages.value.push({ role: 'assistant', content: data.result, audio: data.audio });
-      } else {
-        return data.result;
-      }
+      return data.result;
     }
   } catch (error) {
     // 忽略解析错误
