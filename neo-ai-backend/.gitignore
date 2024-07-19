@@ -1,6 +1,7 @@
 __pycache__/
 Test/
 Resource/Audio/
+Resource/RAG/
 
 # 忽略所有目录下的setting.py文件  
 **/setting.py

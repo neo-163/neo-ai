@@ -9,7 +9,7 @@ const llm: AppRouteModule = {
   component: LAYOUT,
   redirect: '/llm/index',
   meta: {
-    orderNo: 90000,
+    orderNo: 10000,
     hideChildrenInMenu: true,
     icon: 'whh:paintroll',
     title: t('routes.llm.llm.page'),
@@ -19,7 +19,7 @@ const llm: AppRouteModule = {
     {
       path: 'index',
       name: 'LlmPage',
-      component: () => import('@/views/llm/index.vue'),
+      component: () => import('@/views/llm/native-llm.vue'),
       meta: {
         title: t('routes.llm.llm.page'),
         icon: 'whh:paintroll',

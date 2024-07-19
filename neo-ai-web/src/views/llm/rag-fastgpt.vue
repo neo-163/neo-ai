@@ -89,7 +89,7 @@ const sendMessage = async () => {
     };
 
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
-    const response = await fetch(`${baseUrl}/llm/erniebot_stream`, requestOptions);
+    const response = await fetch(`${baseUrl}/rag/ask_fast`, requestOptions);
 
     if (response.ok) {
       const reader = response.body.getReader();

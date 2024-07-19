@@ -146,7 +146,7 @@
     "page": "引导页"
   },
   "llm": {
-    "page": "AI问答"
+    "page": "原生AI"
   },
   "system": {
     "moduleName": "系统管理",

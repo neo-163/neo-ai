@@ -5,7 +5,7 @@ import time
 import chromadb
 import numpy as np
 import re
-from Extension.RAG.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
+from Extension.RAGChroma.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
 
 # 初始化 ChromaDB
 client = chromadb.Client()

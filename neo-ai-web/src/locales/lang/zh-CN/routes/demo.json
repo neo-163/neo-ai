@@ -145,9 +145,6 @@
   "steps": {
     "page": "引导页"
   },
-  "llm": {
-    "page": "AI问答"
-  },
   "system": {
     "moduleName": "系统管理",
     "account": "账号管理",

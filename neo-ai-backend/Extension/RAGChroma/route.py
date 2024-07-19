@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from fastapi import APIRouter, UploadFile, File
 import os
-from Extension.RAG.pdf_processor import extract_text_from_pdf, store_pdf_chunks_in_db, generate_summary_and_questions, query_chromadb, delete_all_documents, get_erniebot_response
+from Extension.RAGChroma.pdf_processor import extract_text_from_pdf, store_pdf_chunks_in_db, generate_summary_and_questions, query_chromadb, delete_all_documents, get_erniebot_response
 from fastapi.responses import StreamingResponse
 
-router = APIRouter(prefix="/rag")
+router = APIRouter(prefix="/rag_chroma")
 
 class RequestData(BaseModel):
     question: str

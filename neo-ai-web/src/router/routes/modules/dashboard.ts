@@ -7,8 +7,8 @@ const dashboard: AppRouteModule = {
   path: '/dashboard',
   name: 'Dashboard',
   component: LAYOUT,
-  // redirect: '/dashboard/analysis',
-  redirect: '/llm/index',
+  redirect: '/dashboard/analysis',
+  // redirect: '/llm/index',
   meta: {
     orderNo: 10,
     icon: 'ion:grid-outline',
@@ -19,8 +19,8 @@ const dashboard: AppRouteModule = {
     {
       path: 'analysis',
       name: 'Analysis',
-      // component: () => import('@/views/dashboard/analysis/index.vue'),
-      component: () => import('@/views/llm/index.vue'),
+      component: () => import('@/views/dashboard/analysis/index.vue'),
+      // component: () => import('@/views/llm/index.vue'),
       meta: {
         // affix: true,
         title: t('routes.dashboard.analysis'),
