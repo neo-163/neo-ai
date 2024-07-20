@@ -7,7 +7,7 @@ import requests
 import json
 from Extension.RAGFastGPT.setting import FastGPT_URL, FastGPT_Qwen_API_KEY, FastGPT_Erniebot_API_KEY
 
-router = APIRouter(prefix="/rag")
+router = APIRouter(prefix="/rag_fastgpt")
 
 
 class Message(BaseModel):
@@ -22,7 +22,7 @@ class RequestData(BaseModel):
     messages: List[Message]
 
 
-@router.post("/ask1")
+@router.post("/ask")
 async def chat_completions(request: RequestData):
 
     headers = {
