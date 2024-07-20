@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Body
 from pydantic import BaseModel
 from typing import List
 from fastapi.responses import StreamingResponse
@@ -21,24 +21,14 @@ class RequestData(BaseModel):
     messages: List[Message]
 
 
-@router.get("/ask")
-async def chat_completions(
-    chatId: str = Query(...),
-    stream: bool = Query(...),
-    detail: bool = Query(...),
-    messages: str = Query(...)
-):
+@router.post("/ask")
+async def chat_completions(request: RequestData):
+
     headers = {
         'Authorization': 'Bearer ' + FastGPT_Qwen_API_KEY,
         'Content-Type': 'application/json'
     }
-    messages_list = json.loads(messages)
-    data = {
-        'chatId': chatId,
-        'stream': stream,
-        'detail': detail,
-        'messages': messages_list
-    }
+    data = request.dict()
 
     response = requests.post(FastGPT_URL, headers=headers,
                              data=json.dumps(data), stream=True)
@@ -49,6 +39,6 @@ async def chat_completions(
             if line:
                 decoded_line = line.decode('utf-8')
                 print(f"Decoded line: {decoded_line}")  # Debugging output
-                yield f"data: {decoded_line}\n\n"
+                yield f"{decoded_line}\n\n"
 
     return StreamingResponse(generate(), media_type="text/event-stream")

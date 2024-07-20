@@ -9,14 +9,23 @@
         <p>我是您的智能助手,欢迎与我对话!</p>
       </div>
     </div>
-    <div class="chat-messages" @click.stop="toggleAutoScroll" ref="chatMessagesContainer">
+    <div
+      class="chat-messages"
+      @click.stop="toggleAutoScroll"
+      ref="chatMessagesContainer"
+    >
       <div v-if="messages.length === 0" class="welcome-message">
         <p>有什么我可以帮您的吗?请随时向我提问!</p>
       </div>
-      <div v-for="(message, index) in messages" :key="index" class="message" :class="{
-        'user-message': message.role === 'user',
-        'assistant-message': message.role === 'assistant'
-      }">
+      <div
+        v-for="(message, index) in messages"
+        :key="index"
+        class="message"
+        :class="{
+          'user-message': message.role === 'user',
+          'assistant-message': message.role === 'assistant'
+        }"
+      >
         <div class="avatar" v-if="message.role === 'assistant'">
           <img src="../../assets/images/ai-avatar.png" alt="Assistant Avatar" />
         </div>
@@ -26,9 +35,17 @@
       </div>
     </div>
     <div class="chat-input">
-      <a-input v-model:value="inputMessage" placeholder="输入您的消息..." @keyup.enter="sendMessage" />
-      <a-button type="primary" @click="sendMessage" :disabled="isAssistantResponding">{{ isAssistantResponding ?
-        '回复中...' : '发送' }}</a-button>
+      <a-input
+        v-model:value="inputMessage"
+        placeholder="输入您的消息..."
+        @keyup.enter="sendMessage"
+      />
+      <a-button
+        type="primary"
+        @click="sendMessage"
+        :disabled="isAssistantResponding"
+        >{{ isAssistantResponding ? '回复中...' : '发送' }}</a-button
+      >
     </div>
   </div>
 </template>
@@ -86,7 +103,7 @@ const sendMessage = async () => {
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
-    const raw = JSON.stringify({
+    const requestBody = {
       chatId: '111',
       stream: true,
       detail: false,
@@ -94,49 +111,35 @@ const sendMessage = async () => {
         content: msg.content,
         role: msg.role
       }))
-    });
-
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw
     };
 
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
-    const queryParams = new URLSearchParams({
-      chatId: '111',
-      stream: 'true',
-      detail: 'false',
-      messages: JSON.stringify(
-        messages.value.map((msg) => ({
-          content: msg.content,
-          role: msg.role
-        }))
-      )
+    const response = await fetch(`${baseUrl}/rag_fastgpt/ask`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(requestBody)
     });
 
-    const eventSource = new EventSource(`${baseUrl}/rag_fastgpt/ask?${queryParams.toString()}`);
-
-    eventSource.onmessage = (event) => {
+    if (response.ok) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
       const lastMessageIndex = messages.value.length - 1;
-      const parsedChunk = parseChunk(event.data);
-      messages.value[lastMessageIndex].content += parsedChunk;
-      scrollToBottom(); // Scroll down after updating the message content
 
-      if (event.data === '[DONE]') {
-        isAssistantResponding.value = false;
-        eventSource.close();
-      }
-    };
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
 
-    eventSource.onerror = (event) => {
-      if (event.eventPhase !== EventSource.CLOSED) {
-        createMessage.error('聊天请求失败,请重试');
+        const chunk = decoder.decode(value);
+        const parsedChunk = parseChunk(chunk);
+        messages.value[lastMessageIndex].content += parsedChunk;
+        scrollToBottom(); // Scroll down after updating the message content
       }
+
       isAssistantResponding.value = false;
-      eventSource.close();
-    };
-
+    } else {
+      createMessage.error('聊天请求失败,请重试');
+      isAssistantResponding.value = false;
+    }
   } catch (error) {
     createMessage.error('聊天请求失败,请重试');
     isAssistantResponding.value = false;
