@@ -9,23 +9,14 @@
         <p>我是您的智能助手,欢迎与我对话!</p>
       </div>
     </div>
-    <div
-      class="chat-messages"
-      @click.stop="toggleAutoScroll"
-      ref="chatMessagesContainer"
-    >
+    <div class="chat-messages" @click.stop="toggleAutoScroll" ref="chatMessagesContainer">
       <div v-if="messages.length === 0" class="welcome-message">
         <p>有什么我可以帮您的吗?请随时向我提问!</p>
       </div>
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        class="message"
-        :class="{
-          'user-message': message.role === 'user',
-          'assistant-message': message.role === 'assistant'
-        }"
-      >
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="{
+        'user-message': message.role === 'user',
+        'assistant-message': message.role === 'assistant'
+      }">
         <div class="avatar" v-if="message.role === 'assistant'">
           <img src="../../assets/images/ai-avatar.png" alt="Assistant Avatar" />
         </div>
@@ -35,23 +26,15 @@
       </div>
     </div>
     <div class="chat-input">
-      <a-input
-        v-model:value="inputMessage"
-        placeholder="输入您的消息..."
-        @keyup.enter="sendMessage"
-      />
-      <a-button
-        type="primary"
-        @click="sendMessage"
-        :disabled="isAssistantResponding"
-        >{{ isAssistantResponding ? '回复中...' : '发送' }}</a-button
-      >
+      <a-input v-model:value="inputMessage" placeholder="输入您的消息..." @keyup.enter="sendMessage" />
+      <a-button type="primary" @click="sendMessage" :disabled="isAssistantResponding">{{ isAssistantResponding ?
+        '回复中...' : '发送' }}</a-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 import { useMessage } from '/@/hooks/web/useMessage';
 import * as marked from 'marked';
 
@@ -120,53 +103,67 @@ const sendMessage = async () => {
     };
 
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
-    const response = await fetch(`${baseUrl}/rag_fastgpt/ask`, requestOptions);
+    const queryParams = new URLSearchParams({
+      chatId: '111',
+      stream: 'true',
+      detail: 'false',
+      messages: JSON.stringify(
+        messages.value.map((msg) => ({
+          content: msg.content,
+          role: msg.role
+        }))
+      )
+    });
 
-    if (response.ok) {
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let receivedData = '';
+    const eventSource = new EventSource(`${baseUrl}/rag_fastgpt/ask?${queryParams.toString()}`);
 
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
+    eventSource.onmessage = (event) => {
+      const lastMessageIndex = messages.value.length - 1;
+      const parsedChunk = parseChunk(event.data);
+      messages.value[lastMessageIndex].content += parsedChunk;
+      scrollToBottom(); // Scroll down after updating the message content
 
-        const chunk = decoder.decode(value);
-        receivedData += chunk;
-
-        const parsedChunk = parseChunk(chunk);
-        const lastMessageIndex = messages.value.length - 1;
-        messages.value[lastMessageIndex].content += parsedChunk;
-        scrollToBottom(); // Scroll down after updating the message content
+      if (event.data === '[DONE]') {
+        isAssistantResponding.value = false;
+        eventSource.close();
       }
-    } else {
-      createMessage.error('聊天请求失败,请重试');
-    }
+    };
+
+    eventSource.onerror = (event) => {
+      if (event.eventPhase !== EventSource.CLOSED) {
+        createMessage.error('聊天请求失败,请重试');
+      }
+      isAssistantResponding.value = false;
+      eventSource.close();
+    };
+
   } catch (error) {
     createMessage.error('聊天请求失败,请重试');
-  } finally {
     isAssistantResponding.value = false;
   }
 };
 
 const parseChunk = (chunk: string): string => {
   let result = '';
-  try {
-    const jsonArray = JSON.parse(chunk);
-    for (const json of jsonArray) {
-      if (json.choices && json.choices.length > 0) {
-        const choice = json.choices[0];
-        if (choice.delta && choice.delta.content) {
-          result += choice.delta.content;
+  const lines = chunk.split('\n');
+  for (const line of lines) {
+    if (line.startsWith('data: ')) {
+      const jsonString = line.slice(6).trim(); // Remove "data: " prefix
+      try {
+        const json = JSON.parse(jsonString);
+        if (json.choices && json.choices.length > 0) {
+          const choice = json.choices[0];
+          if (choice.delta && choice.delta.content) {
+            result += choice.delta.content;
+          }
         }
+      } catch (e) {
+        // Ignore JSON parsing errors
       }
     }
-  } catch (e) {
-    // Ignore JSON parsing errors
   }
   return result;
 };
-
 </script>
 
 <style lang="less" scoped>
