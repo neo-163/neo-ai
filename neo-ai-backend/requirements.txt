@@ -17,3 +17,4 @@ opencv-python
 segment-anything
 langchain
 pdfplumber
+sentence_transformers
