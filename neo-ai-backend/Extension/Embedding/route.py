@@ -19,7 +19,7 @@ model_name = 'sentence-transformers/all-MiniLM-L6-v2'
 # model_name = 'neo-ai/models/embedding/all-MiniLM-L6-v2'
 model = SentenceTransformer(model_name)
 
-@router.post("/v1/", response_model=EmbeddingResponse)
+@router.post("/v1", response_model=EmbeddingResponse)
 def embed_texts(request: TextRequest):
     try:
         text = request.text
