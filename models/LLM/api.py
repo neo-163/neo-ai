@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from openai import OpenAI
 import asyncio
 import json
 
-router = APIRouter(prefix="/llm_private")
+app = FastAPI()
 
 # 设置 OpenAI 客户端
 openai_client = OpenAI(base_url="http://127.0.0.1:8100/v1", api_key="not-needed")
@@ -71,7 +71,11 @@ async def generate_reply(user_input):
 
     history.append({"role": "assistant", "content": reply})
 
-@router.post("/chat")
+@app.post("/llm_private/chat1")
 async def chat(request: Request):
     user_input = (await request.json())["input"]
     return StreamingResponse(generate_reply(user_input), media_type="text/event-stream", headers={"X-Accel-Buffering": "no"})
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
