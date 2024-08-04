@@ -9,12 +9,7 @@ scikit-learn
 aliyun-python-sdk-core==2.13.12
 PyPDF2
 SQLAlchemy
-chromadb
 torch 
-torchvision 
-torchaudio
-opencv-python
-segment-anything
 langchain
 pdfplumber
-sentence_transformers
+text2vec

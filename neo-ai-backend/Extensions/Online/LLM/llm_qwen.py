@@ -1,6 +1,6 @@
 import random
 import dashscope
-from Extension.LLM.setting import Qwen_API_KEY
+from Extensions.Online.LLM.setting import Qwen_API_KEY
 
 dashscope.api_key = Qwen_API_KEY
 

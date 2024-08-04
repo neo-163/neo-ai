@@ -1,7 +1,7 @@
 import json
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
-from Extension.Speech.setting import AccessKey_ID, AccessKey_Secret
+from Extensions.Online.Speech.setting import AccessKey_ID, AccessKey_Secret
 
 # 如果有redis，token在有效时间内，可以保存在redis中，每次请求时，先从redis中获取token，如果token过期，则重新获取token并更新redis。
 def get_token():

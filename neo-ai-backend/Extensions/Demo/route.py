@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Form
 from pydantic import BaseModel
-from Extension.Demo.demo_logic import test1, test2
+from Extensions.Demo.demo_logic import test1, test2
 
 router = APIRouter(prefix="/demo")
 

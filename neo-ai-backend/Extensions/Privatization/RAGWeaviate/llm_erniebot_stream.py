@@ -1,7 +1,10 @@
+# llm_erniebot_stream.py
+
 import requests
 import json
 import time
-from Extension.LLM.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
+from Extensions.Privatization.RAGWeaviate.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
+from Extensions.Privatization.RAGWeaviate.rag_service import rag_search
 
 
 def gen_erniebot_stream(prompt, ai_name, ai_role, agent):
@@ -22,6 +25,10 @@ def get_access_token(ak, sk):
 
 
 def get_stream_response(prompt, ai_name, ai_role):
+
+    rag = rag_search(prompt)
+    # print(rag)
+
     # token价格：https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7?feedback=1
     # ernie-tiny-8k ernie_speed
 
@@ -34,7 +41,7 @@ def get_stream_response(prompt, ai_name, ai_role):
     url = base_url + "?access_token=" + get_access_token(ak, sk) + source
     data = {
         "system": ai_name+' '+ai_role,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "user", "content": rag + prompt}],
         "stream": True
     }
     payload = json.dumps(data)

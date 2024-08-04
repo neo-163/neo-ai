@@ -1,5 +1,5 @@
 import openai
-from Extension.LLM.setting import ChatGPT_API_KEY
+from Extensions.Privatization.LLM.setting import ChatGPT_API_KEY
 
 
 def chatgpt(prompt, ai_name, ai_role):

@@ -1,6 +1,6 @@
 import requests
 import json
-from Extension.LLM.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
+from Extensions.Privatization.LLM.setting import Erniebot_API_KEY, Erniebot_SECRET_KEY
 
 
 def erniebot(prompt, ai_name, ai_role):

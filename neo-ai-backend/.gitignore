@@ -1,9 +1,10 @@
 __pycache__/
 Test/
-Resource/Audio/
-Resource/RAG/
+Models/
+Resources/Audio/
+Resources/RAG/
 
 # 忽略所有目录下的setting.py文件  
 **/setting.py
-# 但不忽略Extension/Demo/setting.py  
-!Extension/Demo/setting.py
+# 但不忽略Extensions/Demo/setting.py  
+!Extensions/Demo/setting.py

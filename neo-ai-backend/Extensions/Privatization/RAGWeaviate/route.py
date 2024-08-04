@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Dict
-from Extension.RAGFaiss.llm_erniebot_stream import gen_erniebot_stream
+from Extensions.Privatization.RAGWeaviate.llm_erniebot_stream import gen_erniebot_stream
 from fastapi.responses import StreamingResponse
 
-router = APIRouter(prefix="/rag_faiss")
+router = APIRouter(prefix="/rag_weaviate")
 
 
 class RequestData1(BaseModel):

@@ -1,7 +1,7 @@
 import http.client
 import json
-from Extension.Speech.ali_token import get_token
-from Extension.Speech.setting import appKey
+from Extensions.Online.Speech.ali_token import get_token
+from Extensions.Online.Speech.setting import appKey
 
 
 async def ali_speech_recognition(audio_file):

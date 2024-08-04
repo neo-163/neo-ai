@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Dict
-from Extension.LLM.llm_erniebot import erniebot
-from Extension.LLM.llm_erniebot_stream import gen_erniebot_stream
-from Extension.LLM.llm_qwen import qwen
-from Extension.LLM.llm_chatgpt import chatgpt
+from Extensions.Online.LLM.llm_erniebot import erniebot
+from Extensions.Online.LLM.llm_erniebot_stream import gen_erniebot_stream
+from Extensions.Online.LLM.llm_qwen import qwen
+from Extensions.Online.LLM.llm_chatgpt import chatgpt
 from fastapi.responses import StreamingResponse
 
 router = APIRouter(prefix="/llm")

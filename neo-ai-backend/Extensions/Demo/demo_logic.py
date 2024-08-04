@@ -1,4 +1,4 @@
-from Extension.Demo.setting import VALUE1
+from Extensions.Demo.setting import VALUE1
 
 
 def test1(text):

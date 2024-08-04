@@ -2,8 +2,8 @@ import http.client
 import json
 import os
 from datetime import datetime
-from Extension.Speech.ali_token import get_token
-from Extension.Speech.setting import appKey
+from Extensions.Online.Speech.ali_token import get_token
+from Extensions.Online.Speech.setting import appKey
 
 
 def ali_speech_synthesis(text, voice):
@@ -50,7 +50,7 @@ def ali_speech_synthesis(text, voice):
     timestamp = now.strftime("%Y%m%d%H%M%S")
     filename = f"{timestamp}."+format
 
-    audio_dir = f"Resource/Audio/{year}/{year_month_day}"
+    audio_dir = f"Resources/Audio/{year}/{year_month_day}"
     os.makedirs(audio_dir, exist_ok=True)
 
     audioSaveFile = f"{audio_dir}/{filename}"

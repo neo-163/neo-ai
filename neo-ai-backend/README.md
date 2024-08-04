@@ -4,8 +4,8 @@ Neo AI Project
 
 ## Install Python
 
-https://www.python.org/downloads/release/python-3810/
-Python 3.8.10
+https://www.python.org/downloads/release/python-3913/
+Python 3.9.13
 
 ## Install require packages
 
@@ -27,9 +27,9 @@ python -m pip install .
 Go to the location of Project
 
 ```
-uvicorn main:app --reload --port 1888
+python main.py
 ```
 Or
 ```
-python main.py
+uvicorn main:app --reload --port 1888
 ```

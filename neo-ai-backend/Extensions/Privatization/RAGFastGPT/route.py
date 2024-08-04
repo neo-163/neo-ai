@@ -4,7 +4,7 @@ from typing import List
 from fastapi.responses import StreamingResponse
 import requests
 import json
-from Extension.RAGFastGPT.setting import FastGPT_URL, FastGPT_Qwen_API_KEY, FastGPT_Erniebot_API_KEY
+from Extensions.Privatization.RAGFastGPT.setting import FastGPT_URL, FastGPT_Qwen_API_KEY, FastGPT_Erniebot_API_KEY
 
 router = APIRouter(prefix="/rag_fastgpt")
 

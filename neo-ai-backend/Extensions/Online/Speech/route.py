@@ -1,8 +1,8 @@
 from fastapi import FastAPI, APIRouter, APIRouter, File, Body, UploadFile, Response
 from pydantic import BaseModel
-from Extension.Speech.ali_speech_recognition import ali_speech_recognition
-from Extension.Speech.ali_speech_synthesis import ali_speech_synthesis
-from Extension.Speech.ali_speech_voice_list import ali_speech_voice_list
+from Extensions.Online.Speech.ali_speech_recognition import ali_speech_recognition
+from Extensions.Online.Speech.ali_speech_synthesis import ali_speech_synthesis
+from Extensions.Online.Speech.ali_speech_voice_list import ali_speech_voice_list
 
 app = FastAPI()
 
