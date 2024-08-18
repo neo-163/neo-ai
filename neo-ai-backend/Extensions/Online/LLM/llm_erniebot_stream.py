@@ -23,9 +23,9 @@ def get_access_token(ak, sk):
 
 def get_stream_response(prompt, ai_name, ai_role):
     # token价格：https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7?feedback=1
-    # ernie-tiny-8k ernie_speed ERNIE-3.5-128K
+    # ernie-tiny-8k ernie_speed ernie-3.5-128k
 
-    model = "ERNIE-3.5-128K"
+    model = "ernie-3.5-128k"
     ak = Erniebot_API_KEY
     sk = Erniebot_SECRET_KEY
     source = "&sourceVer=0.0.1&source=app_center&appName=streamDemo"
